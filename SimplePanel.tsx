@@ -8,7 +8,7 @@ interface Props extends PanelProps<SimpleOptions> {}
 export class SimplePanel extends PureComponent<Props> {
   // prettier-ignore
   handleClick() {
-    console.log('The link was clicked.');
+    this.componentDidMount();
   }
   // prettier-ignore
   componentDidMount() {
@@ -21,15 +21,14 @@ export class SimplePanel extends PureComponent<Props> {
       
         body: JSON.stringify({  jsonrpc: "2.0",
         
-
+    method:"get_drivers",
     params:{
-      method:"get_drivers",
       driver: "building1",
       point: "AC",
       value: "True"
     }})
     };
-    fetch('https://niro-lenovo-y40-70:8443/drivers', requestOptions)
+    fetch('https://127.0.0.1:8443/drivers', requestOptions)
         .then(response => response.json())
         .then((data) => {
           console.log(data);
