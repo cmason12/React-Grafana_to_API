@@ -1,52 +1,45 @@
 import React, { PureComponent } from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
-import Button from '@material-ui/core/Button';
+import { Tooltip, Button } from '@grafana/ui';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
 export class SimplePanel extends PureComponent<Props> {
-  // prettier-ignore
-  handleClick() {
-    this.componentDidMount();
-  }
-  // prettier-ignore
-  componentDidMount() {
-    // Simple POST request with a JSON body using fetch
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'mode': 'cors',},
-      
-        body: JSON.stringify({  jsonrpc: "2.0",
-        
-    method:"get_drivers",
-    params:{
-      driver: "building1",
-      point: "AC",
-      value: "True"
-    }})
-    };
-    fetch('https://127.0.0.1:8443/drivers', requestOptions)
-        .then(response => response.json())
-        .then((data) => {
-          console.log(data);
-        });
-       
-}
+  onInputChanged = ({ target }: any) => {
+    this.props.onOptionsChange({ ...this.props.options, input: target.value });
+  };
+
+  updatePoint = () => {
+    console.log('Update Point');
+  };
+
   render() {
+    const { options, width, height } = this.props;
     return (
-      <form>
-        <p>
-          <input type="text" defaultValue="Platform" ref="Platform" />
-          <input type="text" defaultValue="Driver" ref="Driver" />
-          <input type="text" defaultValue="Agent" ref="Agent" />
-          <Button variant="contained" color="primary" onClick={this.handleClick}>
-            Submit
-          </Button>
-        </p>
-      </form>
+      <div
+        style={{
+          position: 'relative',
+          width,
+          height,
+        }}
+      >
+        <div>
+          <h2>{options.title}</h2>
+          <input type="text" ng-change={this.onInputChanged} />
+          <Tooltip
+            content={
+              <div>
+                {'Platform: '.concat(options.platform)}
+                <div>{'Device: '.concat(options.device)}</div>
+                <div>{'Point: '.concat(options.point)}</div>
+              </div>
+            }
+          >
+            <Button onClick={this.updatePoint} children={'Update'} />
+          </Tooltip>
+        </div>
+      </div>
     );
   }
 }
